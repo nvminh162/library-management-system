@@ -130,7 +130,7 @@ git clone https://github.com/nvminh162/library-management-system.git
 cd library-management-system
 
 # Run the setup script
-./run-script.sh
+./script.sh
 ```
 
 ## 📖 Documentation
