@@ -1,7 +1,11 @@
 package com.nvminh162.bookservice.command.aggregate;
 
 import com.nvminh162.bookservice.command.command.CreateBookCommand;
+import com.nvminh162.bookservice.command.command.DeleteBookCommand;
+import com.nvminh162.bookservice.command.command.UpdateBookCommand;
 import com.nvminh162.bookservice.command.event.BookCreatedEvent;
+import com.nvminh162.bookservice.command.event.BookDeletedEvent;
+import com.nvminh162.bookservice.command.event.BookUpdatedEvent;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,6 +34,20 @@ public class BookAggregate {
         AggregateLifecycle.apply(event);
     }
 
+    @CommandHandler
+    public void handle(UpdateBookCommand command) {
+        BookUpdatedEvent event = new BookUpdatedEvent();
+        BeanUtils.copyProperties(command, event);
+        AggregateLifecycle.apply(event);
+    }
+
+    @CommandHandler
+    public void handle(DeleteBookCommand command) {
+        BookDeletedEvent event = new BookDeletedEvent();
+        BeanUtils.copyProperties(command, event);
+        AggregateLifecycle.apply(event);
+    }
+
     @EventSourcingHandler
     public void on(BookCreatedEvent event) {
         this.id = event.getId();
@@ -37,4 +55,18 @@ public class BookAggregate {
         this.author = event.getAuthor();
         this.isReady = event.getIsReady();
     }
+
+    @EventSourcingHandler
+    public void on(BookUpdatedEvent event) {
+        this.id = event.getId();
+        this.name = event.getName();
+        this.author = event.getAuthor();
+        this.isReady = event.getIsReady();
+    }
+
+    @EventSourcingHandler
+    public void on(BookDeletedEvent event) {
+        this.id = event.getId();
+    }
+
 }
