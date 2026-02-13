@@ -21,3 +21,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+axon:
+  axonserver:
+    enabled: true
+    servers: localhost:8124
+

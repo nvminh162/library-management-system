@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookCommandController {
 
     CommandGateway commandGateway;
@@ -29,7 +29,6 @@ public class BookCommandController {
                 .author(model.getAuthor())
                 .isReady(model.getIsReady())
                 .build();
-        commandGateway.sendAndWait(command);
-        return command.getId();
+        return commandGateway.sendAndWait(command);
     }
 }
