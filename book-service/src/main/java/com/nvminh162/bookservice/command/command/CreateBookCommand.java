@@ -1,10 +1,9 @@
-package com.nvminh162.bookservice.command.data;
+package com.nvminh162.bookservice.command.command;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Getter
 @Setter
@@ -12,13 +11,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "books")
-public class Book {
-
-    @Id
+public class CreateBookCommand {
+    @TargetAggregateIdentifier
     String id;
+
     String name;
+
     String author;
+
     Boolean isReady;
 }
