@@ -4,6 +4,7 @@ import com.nvminh162.bookservice.command.data.Book;
 import com.nvminh162.bookservice.command.data.BookRepository;
 import com.nvminh162.bookservice.query.model.BookResponseModel;
 import com.nvminh162.bookservice.query.queries.GetAllBookQuery;
+import com.nvminh162.bookservice.query.queries.GetBookDetailQuery;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +42,14 @@ public class BookProjection {
             BeanUtils.copyProperties(book, model);
             return model;
         }).toList();
+    }
 
+    @QueryHandler
+    public BookResponseModel handle(GetBookDetailQuery query) {
+        BookResponseModel model = new BookResponseModel();
+        bookRepository.findById(query.getId()).ifPresent(book -> {
+            BeanUtils.copyProperties(book, model);
+        });
+        return model;
     }
 }
