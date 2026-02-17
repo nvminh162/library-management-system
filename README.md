@@ -152,4 +152,76 @@ This project is for educational purposes as part of a microservices learning jou
 
 ---
 
-⭐ If you find this project helpful, please consider giving it a star!
+
+```
+ Client (Postman / Browser)
+   │
+   │  POST /api/v1/books  {"name":"Java Book","author":"nvminh162"}
+   ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [1] BookCommandController                                        │
+│     Nhận request → Tạo CreateBookCommand → Gửi qua CommandGateway│
+└──────────────────────┬───────────────────────────────────────────┘
+                       │  commandGateway.sendAndWait(command)
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [2] Axon Command Bus  (framework tự xử lý, không có code)       │
+│     Nhận command → Tìm @CommandHandler phù hợp → Gọi Aggregate  │
+└──────────────────────┬───────────────────────────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [3] BookAggregate (@CommandHandler)                               │
+│     Validate logic → Tạo Event → AggregateLifecycle.apply(event) │
+│                                                                  │
+│     apply(event) sẽ làm 3 việc song song:                        │
+│       ├─ a. Gọi @EventSourcingHandler → cập nhật state Aggregate │
+│       ├─ b. Lưu event vào Event Store (Axon tự động)             │
+│       └─ c. Publish event ra Event Bus                           │
+└──────────────────────┬───────────────────────────────────────────┘
+                       │  Event Bus broadcast
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [4] BookEventsHandler (@EventHandler)                             │
+│     Lắng nghe event → Tạo JPA Entity → bookRepository.save()     │
+│     → INSERT INTO books ...                                      │
+└──────────────────────┬───────────────────────────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [5] Response trả về Client                                       │
+│     HTTP 200 OK                                                  │
+│     Body: "0a977fd5-b39e-4ed3-b833-8fedc698e936" (Book ID)       │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+```
+ Client (Postman / Browser)
+   │
+   │  GET /api/v1/books
+   ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [1] BookQueryController                                          │
+│     Nhận request → Tạo Query object → Gửi qua QueryGateway      │
+└──────────────────────┬───────────────────────────────────────────┘
+                       │  queryGateway.query(query, responseType).join()
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [2] Axon Query Bus  (framework tự xử lý, không có code)         │
+│     Nhận query → Tìm @QueryHandler phù hợp → Gọi Projection    │
+└──────────────────────┬───────────────────────────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [3] BookProjection (@QueryHandler)                               │
+│     Đọc từ Database → Map sang BookResponseModel → Trả về       │
+│                                                                  │
+│     bookRepository.findAll()                                     │
+│       → SELECT * FROM books                                      │
+│       → List<Book> → List<BookResponseModel>                     │
+└──────────────────────┬───────────────────────────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ [4] Response trả về Client                                       │
+│     HTTP 200 OK                                                  │
+│     Body: [{"id":"...","name":"Java Book 1","author":"nvminh162", │
+│             "isReady":true}, ...]                                 │
+└──────────────────────────────────────────────────────────────────┘
+```
