@@ -27,7 +27,7 @@ public class EmployeeQueryController {
     public List<EmployeeResponseModel> getAllEmployees() {
         GetAllEmployeeQuery query = new GetAllEmployeeQuery();
         return queryGateway.query(query, ResponseTypes.multipleInstancesOf(EmployeeResponseModel.class)).join();
-        
     }
-    
+
+
 }

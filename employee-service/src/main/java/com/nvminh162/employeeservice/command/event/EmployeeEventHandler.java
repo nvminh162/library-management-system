@@ -1,5 +1,7 @@
 package com.nvminh162.employeeservice.command.event;
 
+import java.util.Optional;
+
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,17 @@ public class EmployeeEventHandler {
     public void on(EmployeeCreatedEvent event) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(event, employee);
+        employeeRepository.save(employee);
+    }
+
+    @EventHandler
+    public void on(EmployeeUpdatedEvent event) throws Exception{
+        Optional<Employee> oldEmployee = employeeRepository.findById(event.getId());
+        Employee employee = oldEmployee.orElseThrow(() -> new Exception("Employee not found"));
+        employee.setFirstName(event.getFirstName());
+        employee.setKin(event.getKin());
+        employee.setLastName(event.getLastName());
+        employee.setIsDisciplined(event.getIsDisciplined());
         employeeRepository.save(employee);
     }
 }
