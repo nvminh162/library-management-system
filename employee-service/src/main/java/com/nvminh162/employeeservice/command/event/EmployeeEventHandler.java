@@ -2,6 +2,7 @@ package com.nvminh162.employeeservice.command.event;
 
 import java.util.Optional;
 
+import org.axonframework.eventhandling.DisallowReplay;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -41,8 +42,13 @@ public class EmployeeEventHandler {
     }
 
     @EventHandler
+    @DisallowReplay
     public void on(EmployeeDeletedEvent event) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(event.getId());
-        optionalEmployee.ifPresent(employeeRepository::delete);
+        try {
+            employeeRepository.findById(event.getId()).orElseThrow(() -> new Exception("Employee not found"));
+            employeeRepository.deleteById(event.getId());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 }
