@@ -10,6 +10,9 @@ import com.nvminh162.employeeservice.query.model.EmployeeResponseModel;
 import com.nvminh162.employeeservice.query.queries.GetAllEmployeeQuery;
 import com.nvminh162.employeeservice.query.queries.GetDetailEmployeeQuery;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,10 +25,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/employees")
+@Tag(name = "Employee Query")
 public class EmployeeQueryController {
 
     QueryGateway queryGateway;
 
+    @Operation(
+        summary = "Get list employee",
+        description = "Get endpoint for employee with filter",
+        responses = {
+            @ApiResponse(
+                description = "Success",
+                responseCode = "200"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized / Invalid token"
+            )
+        }
+    )
     @GetMapping
     public List<EmployeeResponseModel> getAllEmployees(
             @RequestParam(required = false, defaultValue = "false") Boolean isDisciplined) {

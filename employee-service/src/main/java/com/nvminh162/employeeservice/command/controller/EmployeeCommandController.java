@@ -12,6 +12,7 @@ import com.nvminh162.employeeservice.command.command.UpdateEmployeeCommand;
 import com.nvminh162.employeeservice.command.model.CreateEmployeeModel;
 import com.nvminh162.employeeservice.command.model.UpdateEmployeeModel;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/api/v1/employees")
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+// @Hidden
 public class EmployeeCommandController {
 
     CommandGateway commandGateway;
@@ -54,6 +56,7 @@ public class EmployeeCommandController {
         return commandGateway.sendAndWait(command);
     }
 
+    @Hidden
     @DeleteMapping("/{employeeId}")
     public String deleteEmployee(@PathVariable String employeeId) {
         DeleteEmployeeCommand command = DeleteEmployeeCommand.builder()
