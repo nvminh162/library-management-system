@@ -39,4 +39,10 @@ public class EmployeeEventHandler {
         employee.setIsDisciplined(event.getIsDisciplined());
         employeeRepository.save(employee);
     }
+
+    @EventHandler
+    public void on(EmployeeDeletedEvent event) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(event.getId());
+        optionalEmployee.ifPresent(employeeRepository::delete);
+    }
 }

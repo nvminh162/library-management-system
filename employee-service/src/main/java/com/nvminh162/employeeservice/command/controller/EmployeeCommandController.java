@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nvminh162.employeeservice.command.command.CreateEmployeeCommand;
+import com.nvminh162.employeeservice.command.command.DeleteEmployeeCommand;
 import com.nvminh162.employeeservice.command.command.UpdateEmployeeCommand;
 import com.nvminh162.employeeservice.command.model.CreateEmployeeModel;
 import com.nvminh162.employeeservice.command.model.UpdateEmployeeModel;
@@ -16,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
@@ -47,6 +49,14 @@ public class EmployeeCommandController {
             .lastName(model.getLastName())
             .kin(model.getKin())
             .isDisciplined(model.getIsDisciplined())
+            .build();
+        return commandGateway.sendAndWait(command);
+    }
+
+    @DeleteMapping("/{employeeId}")
+    public String deleteEmployee(@PathVariable String employeeId) {
+        DeleteEmployeeCommand command = DeleteEmployeeCommand.builder()
+            .id(employeeId)
             .build();
         return commandGateway.sendAndWait(command);
     }
