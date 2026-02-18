@@ -1,15 +1,25 @@
 server:
-  port: ${PORT:8080} # Port mà API Gateway sẽ chạy, mặc định là 8080 nếu không có biến môi trường PORT
+  port: ${PORT:8080}
 
 spring:
   application:
     name: api-gateway # Tên của service, dùng để đăng ký với Eureka Server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Cho phép API Gateway tự động phát hiện các service đã đăng ký với Eureka Server
+      routes:
+        - id: employee-service # ID của route, có thể đặt tùy ý
+          uri: lb://employee-service # Sử dụng load balancer để định tuyến đến Employee Service, "employee-service" là tên của service đã đăng ký với Eureka Server
+          predicates:
+            - Path=/api/v1/employees/** # Định nghĩa đường dẫn mà API Gateway sẽ chuyển tiếp đến Employee Service
 
 eureka:
   instance:
-    hostname: ${HOSTNAME:localhost} # Địa chỉ IP hoặc hostname của service này
+    hostname: localhost # Địa chỉ IP hoặc hostname của service này
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Địa chỉ của Eureka Server để đăng ký và lấy thông tin các service khác
-      register-with-eureka: true # Cho phép đăng ký service này với Eureka Server
-      fetch-registry: true # Cho phép lấy thông tin registry của các service khác từ Eureka Server
+      defaultZone: http://localhost:8761/eureka # Địa chỉ của Eureka Server để đăng ký và lấy thông tin các service khác
+    register-with-eureka: true # Cho phép đăng ký service này với Eureka Server
+    fetch-registry: true # Cho phép lấy thông tin registry của các service khác từ Eureka Server
