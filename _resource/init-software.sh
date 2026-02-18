@@ -4,3 +4,5 @@ java -jar .\axonserver.jar
 # docker:
 docker run -d --name axon-server -p 8024:8024 -p 8124:8124 docker.axoniq.io/axoniq/axonserver
 
+# run override port
+.\mvnw spring-boot:run `"-Dspring-boot.run.arguments=--server.port=xxxx`"
