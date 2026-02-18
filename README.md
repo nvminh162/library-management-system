@@ -2,6 +2,84 @@
 
 A comprehensive microservices-based library management system built with Java Spring Boot, demonstrating modern architectural patterns and cloud-native technologies.
 
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        Client[Client Applications]
+    end
+
+    subgraph "API Gateway Layer"
+        Gateway[API Gateway<br/>Port: 8080<br/>Rate Limiting & Auth]
+    end
+
+    subgraph "Service Discovery"
+        Eureka[Eureka Server<br/>Port: 8761]
+    end
+
+    subgraph "Microservices"
+        BookService[Book Service<br/>Port: 9001<br/>CQRS + Event Sourcing]
+        BorrowingService[Borrowing Service<br/>Port: 9003<br/>Saga Orchestration]
+        EmployeeService[Employee Service<br/>Port: 9002<br/>CQRS + Event Sourcing]
+        UserService[User Service<br/>Port: 9005<br/>Authentication]
+        NotificationService[Notification Service<br/>Port: 9003<br/>Email & Kafka Consumer]
+        CommonService[Common Service<br/>Shared Components]
+    end
+
+    subgraph "Event Store & Messaging"
+        AxonServer[Axon Server<br/>Port: 8124<br/>Event Store & Message Router]
+        Kafka[Apache Kafka<br/>Port: 9092<br/>Event Streaming]
+        Zookeeper[Zookeeper<br/>Port: 2181]
+    end
+
+    subgraph "Data Layer"
+        BookDB[(H2 Database<br/>Book Data)]
+        BorrowingDB[(H2 Database<br/>Borrowing Data)]
+        EmployeeDB[(H2 Database<br/>Employee Data)]
+        UserDB[(MySQL Database<br/>User Data)]
+    end
+
+    subgraph "Cache & Infrastructure"
+        Redis[Redis<br/>Port: 6379<br/>Rate Limiting]
+        ControlCenter[Kafka Control Center<br/>Port: 9021]
+    end
+
+    Client --> Gateway
+    Gateway --> Eureka
+    Gateway --> Redis
+    Gateway --> BookService
+    Gateway --> EmployeeService
+    Gateway --> UserService
+
+    BookService --> Eureka
+    BorrowingService --> Eureka
+    EmployeeService --> Eureka
+    UserService --> Eureka
+    NotificationService --> Eureka
+
+    BookService --> AxonServer
+    BorrowingService --> AxonServer
+    EmployeeService --> AxonServer
+    NotificationService --> AxonServer
+
+    BookService --> BookDB
+    BorrowingService --> BorrowingDB
+    EmployeeService --> EmployeeDB
+    UserService --> UserDB
+
+    NotificationService --> Kafka
+    Kafka --> Zookeeper
+    Kafka --> ControlCenter
+
+    BookService -.Event.-> BorrowingService
+    BorrowingService -.Event.-> BookService
+    BorrowingService -.Event.-> EmployeeService
+
+    style Gateway fill:#4CAF50
+    style AxonServer fill:#FF9800
+    style Kafka fill:#2196F3
+    style Redis fill:#F44336
+```
+
 ![Architecture Diagram](./_docs/readme/hight-level-architecture-project.png)
 ![CI/CD Pipeline](./_docs/readme/cicd.png)
 
