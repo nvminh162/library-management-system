@@ -100,6 +100,22 @@ services:
     volumes:
       - kafka-data-3:/var/lib/kafka/data
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui-cluster
+    ports:
+      - "9022:9022"
+    environment:
+      SERVER_PORT: 9022
+      KAFKA_CLUSTERS_0_NAME: "kraft-cluster"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9094,kafka-2:9094,kafka-3:9094
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    networks:
+      - kafka-net
+
 volumes:
   kafka-data-1:
   kafka-data-2:
@@ -108,3 +124,4 @@ volumes:
 networks:
   kafka-net:
     driver: bridge
+    name: kafka-net
