@@ -24,6 +24,7 @@ spring:
                 redis-rate-limiter.replenishRate: 10 # Số lượng token được thêm vào bucket mỗi giây
                 redis-rate-limiter.burstCapacity: 20 # Số lượng token tối đa trong bucket (sức chứa của bucket)
                 redis-rate-limiter.requestedTokens: 1 # Số lượng token cần thiết để xử lý một yêu cầu
+            - KeyAuthFilter
 
 eureka:
   instance:
@@ -33,3 +34,5 @@ eureka:
       defaultZone: http://localhost:8761/eureka # Địa chỉ của Eureka Server để đăng ký và lấy thông tin các service khác
       register-with-eureka: true # Cho phép đăng ký service này với Eureka Server
       fetch-registry: true # Cho phép lấy thông tin registry của các service khác từ Eureka Server
+
+apiKey: nvminh162
