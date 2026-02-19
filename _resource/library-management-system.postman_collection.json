@@ -119,7 +119,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:9001/api/v1/books/fe9a61a1-9785-4305-b0f3-39581d2e0ba25",
+              "raw": "http://localhost:9001/api/v1/books/9a58e4dc-2205-4067-869d-d935ff4bf410",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -129,7 +129,7 @@
                 "api",
                 "v1",
                 "books",
-                "fe9a61a1-9785-4305-b0f3-39581d2e0ba25"
+                "9a58e4dc-2205-4067-869d-d935ff4bf410"
               ]
             }
           },
@@ -147,7 +147,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstName\": \"Minh\",\r\n    \"lastName\": \"Nguyen Van\",\r\n    \"kin\": \"921929129\"\r\n}",
+              "raw": "{\r\n    \"firstName\": \"1\",\r\n    \"lastName\": \"1\",\r\n    \"kin\": \"1\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -198,7 +198,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstName\": \"Minh 23\",\r\n    \"lastName\": \"Nguyen Van 23\",\r\n    \"kin\": \"11111113\",\r\n    \"isDisciplined\": true\r\n}",
+              "raw": "{\r\n    \"firstName\": \"2\",\r\n    \"lastName\": \"2\",\r\n    \"kin\": \"2\",\r\n    \"isDisciplined\": true\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -206,7 +206,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:9002/api/v1/employees/229f2cf8-95f9-4e3e-bf0a-abc6142bdcd7",
+              "raw": "http://localhost:9002/api/v1/employees/45d005bc-069f-4250-bf3a-e8dbacf98712",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -216,7 +216,7 @@
                 "api",
                 "v1",
                 "employees",
-                "229f2cf8-95f9-4e3e-bf0a-abc6142bdcd7"
+                "45d005bc-069f-4250-bf3a-e8dbacf98712"
               ]
             }
           },
@@ -228,7 +228,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:9002/api/v1/employees/f7521b96-7d55-451e-b196-ee637d072adc",
+              "raw": "http://localhost:9002/api/v1/employees/61398db0-fc1e-4cdb-a1ea-e3a7a20395df",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -238,7 +238,7 @@
                 "api",
                 "v1",
                 "employees",
-                "f7521b96-7d55-451e-b196-ee637d072adc"
+                "61398db0-fc1e-4cdb-a1ea-e3a7a20395df"
               ]
             }
           },
@@ -261,6 +261,38 @@
                 "v1",
                 "employees",
                 "f7521b96-7d55-451e-b196-ee637d072adc"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "api-gateway",
+      "item": [
+        {
+          "name": "Employee All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apiKey",
+                "value": "nvminh162",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/employees",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "employees"
               ]
             }
           },
