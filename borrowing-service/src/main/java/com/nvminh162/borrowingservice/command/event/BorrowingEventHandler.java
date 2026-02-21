@@ -1,5 +1,7 @@
 package com.nvminh162.borrowingservice.command.event;
 
+import java.util.Optional;
+
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 
@@ -25,5 +27,11 @@ public class BorrowingEventHandler {
         borrowing.setEmployeeId(event.getEmployeeId());
         borrowing.setBorrowingDate(event.getBorrowingDate());
         borrowingRepository.save(borrowing);
+    }
+
+    @EventHandler
+    public void on(BorrowingDeletedEvent event) {
+        Optional<Borrowing> optionalBorrowing = borrowingRepository.findById(event.getId());
+        optionalBorrowing.ifPresent(borrowing -> borrowingRepository.delete(borrowing));
     }
 }

@@ -2,6 +2,8 @@ package com.nvminh162.bookservice.command.event;
 
 import com.nvminh162.bookservice.command.data.Book;
 import com.nvminh162.bookservice.command.data.BookRepository;
+import com.nvminh162.commonservice.event.BookUpdatedStatusEvent;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,5 +42,14 @@ public class BookEventsHandler {
     public void on(BookDeletedEvent event) {
         Optional<Book> optionalBook = bookRepository.findById(event.getId());
         optionalBook.ifPresent(bookRepository::delete);
+    }
+
+    @EventHandler
+    public void on(BookUpdatedStatusEvent event) {
+        Optional<Book> optionalBook = bookRepository.findById(event.getBookId());
+        optionalBook.ifPresent(book -> {
+            book.setIsReady(event.getIsReady());
+            bookRepository.save(book);
+        });
     }
 }

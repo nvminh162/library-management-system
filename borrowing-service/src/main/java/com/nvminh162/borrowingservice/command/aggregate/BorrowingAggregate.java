@@ -10,7 +10,9 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
 import com.nvminh162.borrowingservice.command.command.CreateBorrowingCommand;
+import com.nvminh162.borrowingservice.command.command.DeleteBorrowingCommand;
 import com.nvminh162.borrowingservice.command.event.BorrowingCreatedEvent;
+import com.nvminh162.borrowingservice.command.event.BorrowingDeletedEvent;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -35,11 +37,22 @@ public class BorrowingAggregate {
         AggregateLifecycle.apply(event);
     }
 
+    @CommandHandler
+    public void handle(DeleteBorrowingCommand command) {
+        BorrowingDeletedEvent event = new BorrowingDeletedEvent(command.getId());
+        AggregateLifecycle.apply(event);
+    }
+
     @EventSourcingHandler
     public void on(BorrowingCreatedEvent event) {
         this.id = event.getId();
         this.bookId = event.getBookId();
         this.employeeId = event.getEmployeeId();
         this.borrowingDate = event.getBorrowingDate();
+    }
+
+    @EventSourcingHandler
+    public void on(BorrowingDeletedEvent event) {
+        this.id = event.getId();
     }
 }

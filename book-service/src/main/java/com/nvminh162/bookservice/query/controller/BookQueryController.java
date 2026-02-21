@@ -1,8 +1,9 @@
 package com.nvminh162.bookservice.query.controller;
 
-import com.nvminh162.bookservice.query.model.BookResponseModel;
+import com.nvminh162.commonservice.model.BookResponseCommonModel;
 import com.nvminh162.bookservice.query.queries.GetAllBookQuery;
-import com.nvminh162.bookservice.query.queries.GetBookDetailQuery;
+import com.nvminh162.commonservice.queries.GetBookDetailQuery;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,16 +25,16 @@ public class BookQueryController {
     QueryGateway queryGateway;
 
     @GetMapping
-    public List<BookResponseModel> getAllBooks() {
+    public List<BookResponseCommonModel> getAllBooks() {
         GetAllBookQuery query = new GetAllBookQuery();
-        List<BookResponseModel> books = queryGateway.query(query, ResponseTypes.multipleInstancesOf(BookResponseModel.class)).join();
+        List<BookResponseCommonModel> books = queryGateway.query(query, ResponseTypes.multipleInstancesOf(BookResponseCommonModel.class)).join();
         return books;
     }
 
     @GetMapping("/{bookId}")
-    public BookResponseModel getDetail(@PathVariable String bookId) {
+    public BookResponseCommonModel getDetail(@PathVariable String bookId) {
         GetBookDetailQuery query = new GetBookDetailQuery(bookId);
-        BookResponseModel book = queryGateway.query(query, ResponseTypes.instanceOf(BookResponseModel.class)).join();
+        BookResponseCommonModel book = queryGateway.query(query, ResponseTypes.instanceOf(BookResponseCommonModel.class)).join();
         return book;
     }
 }

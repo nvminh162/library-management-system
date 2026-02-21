@@ -1,4 +1,4 @@
-package com.nvminh162.bookservice.query.queries;
+package com.nvminh162.commonservice.queries;
 
 
 import lombok.*;
