@@ -1,5 +1,17 @@
 services:
-    discovery:
+    axonserver:
+        image: 'axoniq/axonserver:latest'
+        hostname: axonserver
+        container_name: axonserver
+        environment:
+            - 'AXONIQ_AXONSERVER_STANDALONE=TRUE'
+        ports:
+            - '8024:8024'
+            - '8124:8124'
+            - '8224:8224'
+        networks:
+            - microservices-network
+    discover-server:
         build:
             context: .
             dockerfile: discover-server/Dockerfile
@@ -7,6 +19,20 @@ services:
             - '8761:8761'
         networks:
             - microservices-network
+    book-service:
+        build:
+            context: .
+            dockerfile: book-service/Dockerfile
+        ports:
+            - '9001:9001'
+        networks:
+            - microservices-network
+        depends_on:
+            - discover-server
+            - axonserver
+        environment:
+            - 'AXONIQ_AXONSERVER_SERVERS=axonserver:8124'
+    
 networks:
     microservices-network:
         driver: bridge

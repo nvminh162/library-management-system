@@ -1,0 +1,13 @@
+services:
+    axonserver:
+        image: 'axoniq/axonserver:latest'
+        hostname: axonserver
+        container_name: axonserver
+        environment:
+            - 'AXONIQ_AXONSERVER_STANDALONE=TRUE'
+        ports:
+            - '8024:8024'
+            - '8124:8124'
+            - '8224:8224'
+        networks:
+            - microservice-networks
