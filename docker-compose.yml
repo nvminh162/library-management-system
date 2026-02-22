@@ -1,4 +1,26 @@
 services:
+    redis:
+        image: redis:latest
+        restart: no
+        hostname: redis
+        ports:
+            - "6379:6379"
+        networks:
+            - microservices-network
+    redisinsight:
+        image: redis/redisinsight:latest
+        container_name: redisinsight
+        restart: unless-stopped
+        ports:
+            - "8001:5540"
+        volumes:
+            - redisinsight_data:/data
+        environment:
+            - RITRUSTEDORIGINS=http://localhost:8001,http://127.0.0.1:8001
+        depends_on:
+            - redis
+        networks:
+            - microservices-network
     axonserver:
         image: 'axoniq/axonserver:latest'
         hostname: axonserver
@@ -19,6 +41,17 @@ services:
             - '8761:8761'
         networks:
             - microservices-network
+    api-gateway:
+        build:
+            context: .
+            dockerfile: api-gateway/Dockerfile
+        ports:
+            - '8080:8080'
+        networks:
+            - microservices-network
+        depends_on:
+            - discover-server
+            - redis
     book-service:
         build:
             context: .
@@ -36,3 +69,6 @@ services:
 networks:
     microservices-network:
         driver: bridge
+
+volumes:
+    redisinsight_data:

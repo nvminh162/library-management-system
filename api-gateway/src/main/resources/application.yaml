@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8080}
+  port: 8080
 
 spring:
   application:
@@ -7,7 +7,8 @@ spring:
   data:
     redis:
       port: 6379 # Cổng mặc định của Redis, đảm bảo rằng Redis đang chạy trên cổng này
-      host: localhost # Địa chỉ của Redis, nếu Redis chạy trên máy khác, thay
+      # host: localhost # Địa chỉ của Redis, nếu Redis chạy trên máy khác, thay
+      host: redis
   cloud:
     gateway:
       discovery:
@@ -25,13 +26,25 @@ spring:
                 redis-rate-limiter.burstCapacity: 20 # Số lượng token tối đa trong bucket (sức chứa của bucket)
                 redis-rate-limiter.requestedTokens: 1 # Số lượng token cần thiết để xử lý một yêu cầu
             - KeyAuthFilter
-
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/api/v1/books/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                redis-rate-limiter.requestedTokens: 1
+            - KeyAuthFilter
 eureka:
   instance:
-    hostname: localhost # Địa chỉ IP hoặc hostname của service này
+    # hostname: localhost
+    hostname: discover-server
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka # Địa chỉ của Eureka Server để đăng ký và lấy thông tin các service khác
+      # defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discover-server:8761/eureka
       register-with-eureka: true # Cho phép đăng ký service này với Eureka Server
       fetch-registry: true # Cho phép lấy thông tin registry của các service khác từ Eureka Server
 
