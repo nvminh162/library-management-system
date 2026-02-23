@@ -134,3 +134,7 @@ volumes:
 
 # /var/lib/docker/volumes/library-management-system_redisinsight_data/_data/
 # /var/lib/docker/volumes/library-management-system_kafka-data/_data/
+
+# ==========================================================
+# => docker compose up -d
+# ==========================================================
