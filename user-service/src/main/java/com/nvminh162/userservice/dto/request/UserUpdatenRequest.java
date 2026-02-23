@@ -1,4 +1,4 @@
-package com.nvminh162.userservice.dto.response;
+package com.nvminh162.userservice.dto.request;
 
 import java.time.LocalDate;
 
@@ -16,10 +16,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-
-    Long id;
-    String userId;
+public class UserUpdatenRequest {
     String username;
     String email;
     String firstName;
