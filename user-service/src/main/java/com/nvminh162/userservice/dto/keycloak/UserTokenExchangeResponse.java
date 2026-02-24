@@ -19,16 +19,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class TokenExchangeResponse {
+public class UserTokenExchangeResponse {
 
     String accessToken;
     Long expiresIn;
     Long refreshExpiresIn;
+    String refreshToken;
     String tokenType;
     String idToken;
 
     @JsonProperty("not-before-policy")
     Long notBeforePolicy;
 
+    String sessionState;   
     String scope;   
 }

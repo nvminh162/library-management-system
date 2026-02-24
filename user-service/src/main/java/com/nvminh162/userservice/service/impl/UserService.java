@@ -7,9 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nvminh162.userservice.dto.keycloak.Credential;
+import com.nvminh162.userservice.dto.keycloak.LoginRequest;
 import com.nvminh162.userservice.dto.keycloak.TokenExchangeParam;
 import com.nvminh162.userservice.dto.keycloak.TokenExchangeResponse;
 import com.nvminh162.userservice.dto.keycloak.UserCreationParam;
+import com.nvminh162.userservice.dto.keycloak.UserTokenExchangeParam;
+import com.nvminh162.userservice.dto.keycloak.UserTokenExchangeResponse;
 import com.nvminh162.userservice.dto.request.UserCreationRequest;
 import com.nvminh162.userservice.dto.request.UserUpdatenRequest;
 import com.nvminh162.userservice.dto.response.UserResponse;
@@ -113,5 +116,17 @@ public class UserService implements IUserService {
         User user = userRepository.findByUserId(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         userRepository.delete(user);
+    }
+
+    @Override
+    public UserTokenExchangeResponse login(LoginRequest request) {
+        return keycloakClient.exchangeUserToken(realm, UserTokenExchangeParam.builder()
+                .grant_type("password")
+                .client_id(clientId)
+                .client_secret(clientSecret)
+                .scope("openid")
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .build());      
     }
 }
