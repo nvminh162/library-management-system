@@ -14,10 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping("api/v1/public")
+@RequestMapping("api/v1/auth")
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class PublicController {
+public class AuthController {
 
     IUserService userService;
 
