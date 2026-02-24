@@ -1,4 +1,4 @@
-# CGLibrary - Library Management System
+# Library Management System - CQRS & Saga pattern architecture application
 
 A comprehensive microservices-based library management system built with Java Spring Boot, demonstrating modern architectural patterns and cloud-native technologies.
 
