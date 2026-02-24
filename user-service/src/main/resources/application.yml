@@ -23,7 +23,7 @@ eureka:
             defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka}
 
 keycloak:
-    url: ${KEYCLOAK_URL}
-    realm: ${KEYCLOAK_REALM}
-    client-id: ${KEYCLOAK_CLIENT_ID}
-    client-secret: ${KEYCLOAK_CLIENT_SECRET}
+    url: ${KEYCLOAK_URL:http://localhost:8180}
+    realm: ${KEYCLOAK_REALM:realm_name}
+    client-id: ${KEYCLOAK_CLIENT_ID:client_id}
+    client-secret: ${KEYCLOAK_CLIENT_SECRET:client_secret}
