@@ -55,10 +55,10 @@ spring:
                     issuer-uri: ${JWT_ISSUER_URI}
 eureka:
     instance:
-        hostname: discover-server
+        hostname: localhost
     client:
         service-url:
-            defaultZone: http://discover-server:8761/eureka
+            defaultZone: http://localhost:8761/eureka
             register-with-eureka: true # Cho phép đăng ký service này với Eureka Server
             fetch-registry: true # Cho phép lấy thông tin registry của các service khác từ Eureka Server
 
