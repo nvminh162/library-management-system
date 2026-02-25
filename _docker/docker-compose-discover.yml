@@ -1,0 +1,16 @@
+services:
+    discover-server:
+        build:
+            context: .
+            dockerfile: discover-server/Dockerfile
+        ports:
+            - '8761:8761'
+        networks:
+            - microservices-network
+networks:
+    microservices-network:
+        driver: bridge
+
+# ==========================================================
+# # => docker compose -f docker-compose-discover.yml up -d
+# ==========================================================

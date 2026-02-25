@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: discover-server-deployment
+    labels:
+        app: discover-server-label
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: discover-server-label
+    template:
+        metadata:
+            labels:
+                app: discover-server-label
+        spec:
+            containers:
+                - name: discover-server
+                  image: library-management-system-discover-server:latest
+                  imagePullPolicy: IfNotPresent
+                  ports:
+                      - containerPort: 8761
+
+# ===================================================
+# & minikube -p minikube docker-env --shell powershell | Invoke-Expression
+# docker info (Name: minikube)
+# docker ps
+# ===================================================
+# kubectl apply -f k8s.deployment.yaml
+# kubectl get pods
+# kubectl get svc
+# ===================================================
+# kubectl delete -f k8s.deployment.yaml
+# ===================================================
+
