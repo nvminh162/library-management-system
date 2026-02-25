@@ -6,8 +6,8 @@ spring:
         name: api-gateway # Tên của service, dùng để đăng ký với Eureka Server
     data:
         redis:
-            port: 6379 # Cổng mặc định của Redis, đảm bảo rằng Redis đang chạy trên cổng này
-            host: localhost # Địa chỉ của Redis, nếu Redis chạy trên máy khác, thay
+            port: 6379
+            host: localhost
     cloud:
         gateway:
             discovery:
