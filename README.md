@@ -80,8 +80,8 @@ graph TB
     style Redis fill:#F44336
 ```
 
-![Architecture Diagram](./_docs/readme/hight-level-architecture-project.png)
-![CI/CD Pipeline](./_docs/readme/cicd.png)
+![Architecture Diagram](./__docs/readme/hight-level-architecture-project.png)
+![CI/CD Pipeline](./__docs/readme/cicd.png)
 
 ## 📚 About CGLibrary
 
