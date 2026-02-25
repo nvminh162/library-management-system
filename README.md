@@ -83,9 +83,9 @@ graph TB
 ![Architecture Diagram](./__docs/readme/hight-level-architecture-project.png)
 ![CI/CD Pipeline](./__docs/readme/cicd.png)
 
-## 📚 About CGLibrary
+## 📚 About
 
-CGLibrary is a library management system that encompasses various aspects and tasks that librarians and users can perform. The system enables:
+Libraryx is a library management system that encompasses various aspects and tasks that librarians and users can perform. The system enables:
 
 - **Book catalog management** - Complete CRUD operations for book inventory
 - **Book borrowing management** - Track and manage book lending transactions
