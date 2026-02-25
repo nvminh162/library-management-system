@@ -2,6 +2,8 @@ server:
     port: 8080
 
 spring:
+    profiles:
+        active: dev
     application:
         name: api-gateway # Tên của service, dùng để đăng ký với Eureka Server
     data:
