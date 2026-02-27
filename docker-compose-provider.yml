@@ -5,13 +5,20 @@ services:
         ports:
             - '8180:8080'
         environment:
-            KEYCLOAK_ADMIN: admin
-            KEYCLOAK_ADMIN_PASSWORD: admin
+            KC_BOOTSTRAP_ADMIN_USERNAME: admin
+            KC_BOOTSTRAP_ADMIN_PASSWORD: admin
             KC_HTTP_ENABLED: "true"
             KC_HOSTNAME_STRICT: "false"
             KC_HOSTNAME_STRICT_HTTPS: "false"
             KC_PROXY: edge
-        command: start-dev --import-realm
+            KC_SPI_CONNECTIONS_HTTP_CLIENT_DEFAULT_DISABLE_TRUST_MANAGER: "true"
+        command: >
+            start-dev
+            --import-realm
+            --spi-login-protocol-openid-connect-legacy-logout-redirect-uri=true
+            --http-enabled=true
+            --hostname-strict=false
+            --hostname-strict-https=false
         volumes:
             - ./_resources/_keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
         networks:
