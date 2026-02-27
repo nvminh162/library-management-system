@@ -30,7 +30,8 @@ public class KeyAuthFilter extends AbstractGatewayFilterFactory<KeyAuthFilter.Co
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
             String method = exchange.getRequest().getMethod().name();
-
+            System.out.println(">>> Request path: " + path + ", method: " + method);
+            
             if (isPublicEndpoint(path, method)) {
                 return chain.filter(exchange);
             }
@@ -74,9 +75,9 @@ public class KeyAuthFilter extends AbstractGatewayFilterFactory<KeyAuthFilter.Co
     }
 
     private boolean isPublicEndpoint(String path, String method) {
-        return (method.equals("POST") && path.equals("/api/v1/auth/login"))
-                || (method.equals("GET") && path.equals("/api/v1/books"))
-                || (method.equals("GET") && path.equals("/api/v1/employees"))
-                || (method.equals("GET") && path.equals("/api/v1/users"));
+        return (method.equals("POST") && path.startsWith("/api/v1/auth/login"))
+                || (method.equals("GET") && path.startsWith("/api/v1/books"))
+                || (method.equals("GET") && path.startsWith("/api/v1/employees"))
+                || (method.equals("GET") && path.startsWith("/api/v1/users"));
     }
 }
