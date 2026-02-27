@@ -10,15 +10,10 @@ services:
             KC_HTTP_ENABLED: "true"
             KC_HOSTNAME_STRICT: "false"
             KC_HOSTNAME_STRICT_HTTPS: "false"
-            KC_PROXY: edge
-            KC_SPI_CONNECTIONS_HTTP_CLIENT_DEFAULT_DISABLE_TRUST_MANAGER: "true"
+        entrypoint: ["/bin/bash", "-c"]
         command: >
-            start-dev
-            --import-realm
-            --spi-login-protocol-openid-connect-legacy-logout-redirect-uri=true
-            --http-enabled=true
-            --hostname-strict=false
-            --hostname-strict-https=false
+            "/opt/keycloak/bin/kc.sh build &&
+             /opt/keycloak/bin/kc.sh start-dev --import-realm"
         volumes:
             - ./_resources/_keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
         networks:
