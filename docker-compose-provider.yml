@@ -9,11 +9,17 @@ services:
             KC_BOOTSTRAP_ADMIN_PASSWORD: admin
             KC_HTTP_ENABLED: "true"
             KC_HOSTNAME_STRICT: "false"
-            KC_HOSTNAME_STRICT_HTTPS: "false"
         entrypoint: ["/bin/bash", "-c"]
         command: >
-            "/opt/keycloak/bin/kc.sh build &&
-             /opt/keycloak/bin/kc.sh start-dev --import-realm"
+            "/opt/keycloak/bin/kc.sh start-dev --import-realm &
+             KC_PID=$$!
+             echo 'Waiting for Keycloak to be ready...'
+             until curl -sf http://localhost:8080/health/ready > /dev/null 2>&1; do sleep 3; done
+             echo 'Disabling SSL on master realm...'
+             /opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin
+             /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=none
+             echo 'SSL disabled on master realm.'
+             wait $$KC_PID"
         volumes:
             - ./_resources/_keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
         networks:
