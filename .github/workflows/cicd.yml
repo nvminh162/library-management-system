@@ -26,3 +26,16 @@ jobs:
               run: |
                   docker compose -f docker-compose.yml build discover-server
                   docker compose -f docker-compose.yml push discover-server
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Execute remote SSH commands using password
+              uses: appleboy/ssh-action@v1
+              with:
+                  host: ${{ secrets.SERVER_HOST }}
+                  username: ${{ secrets.SERVER_USERNAME }}
+                  key: ${{ secrets.SERVER_KEY }}
+                  port: ${{ secrets.SERVER_PORT }}
+                  script: whoami
