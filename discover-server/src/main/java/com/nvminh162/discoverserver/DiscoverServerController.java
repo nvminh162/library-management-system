@@ -10,6 +10,6 @@ public class DiscoverServerController {
 
     @GetMapping
     public String time(){
-        return "Current date time: " + java.time.LocalDateTime.now();
+        return "(1) Current date time: " + java.time.LocalDateTime.now();
     }
 }
