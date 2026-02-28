@@ -1,5 +1,0 @@
-https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
-
-https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download
-
-https://minikube.sigs.k8s.io/docs/handbook/pushing/
