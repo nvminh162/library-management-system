@@ -8,8 +8,8 @@ git checkout $BRANCH
 git fetch -a
 git pull
 
-sudo docker compose -f docker-compose.yml down
-sudo docker compose -f docker-compose.yml pull discover-server
-sudo docker compose -f docker-compose.yml up -d discover-server
+sudo -E docker compose -f docker-compose.yml down
+sudo -E docker compose -f docker-compose.yml pull discover-server
+sudo -E docker compose -f docker-compose.yml up -d discover-server
 # clean up unused images and containers
 sudo docker system prune -af
