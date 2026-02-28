@@ -27,6 +27,7 @@ jobs:
                   docker compose -f docker-compose.yml build discover-server
                   docker compose -f docker-compose.yml push discover-server
     deploy:
+        needs: build-and-push
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
