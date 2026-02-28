@@ -95,6 +95,7 @@ services:
         build:
             context: .
             dockerfile: discover-server/Dockerfile
+        image: ${DOCKERHUB_USERNAME:-nvminh162}/discover-server:latest
         ports:
             - '8761:8761'
         networks:
@@ -103,6 +104,7 @@ services:
         build:
             context: .
             dockerfile: api-gateway/Dockerfile
+        image: ${DOCKERHUB_USERNAME:-nvminh162}/api-gateway:latest
         ports:
             - '8080:8080'
         env_file:
@@ -116,6 +118,7 @@ services:
         build:
             context: .
             dockerfile: book-service/Dockerfile
+        image: ${DOCKERHUB_USERNAME:-nvminh162}/book-service:latest
         ports:
             - '9001:9001'
         env_file:
@@ -129,6 +132,7 @@ services:
         build:
             context: .
             dockerfile: employee-service/Dockerfile
+        image: ${DOCKERHUB_USERNAME:-nvminh162}/employee-service:latest
         ports:
             - '9002:9002'
         env_file:
@@ -142,6 +146,7 @@ services:
         build:
             context: .
             dockerfile: borrowing-service/Dockerfile
+        image: ${DOCKERHUB_USERNAME:-nvminh162}/borrowing-service:latest
         ports:
             - '9003:9003'
         env_file:
@@ -156,6 +161,7 @@ services:
         build:
             context: .
             dockerfile: user-service/Dockerfile
+        image: ${DOCKERHUB_USERNAME:-nvminh162}/user-service:latest
         ports:
             - '9004:9004'
         env_file:
@@ -169,6 +175,7 @@ services:
         build:
             context: .
             dockerfile: notification-service/Dockerfile
+        image: ${DOCKERHUB_USERNAME:-nvminh162}/notification-service:latest
         ports:
             - '9005:9005'
         env_file:
