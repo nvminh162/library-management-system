@@ -8,6 +8,7 @@ git checkout $BRANCH
 git fetch -a
 git pull
 
+sudo docker network create microservices-network 2>/dev/null || true
 sudo -E docker compose -f docker-compose.yml down
 sudo -E docker compose -f docker-compose.yml pull discover-server
 sudo -E docker compose -f docker-compose.yml up -d discover-server
