@@ -1,25 +1,20 @@
-package com.nvminh162.employeeservice.command.data;
+package com.nvminh162.notificationservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "employees")
-public class Employee {
-
-    @Id
+@AllArgsConstructor
+public class EmployeeResponseModel {
     String id;
     String firstName;
     String lastName;

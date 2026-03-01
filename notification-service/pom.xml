@@ -37,6 +37,10 @@
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
@@ -59,6 +63,12 @@
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>dotenv-java</artifactId>
 			<version>${dotenv-java.version}</version>
+		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-circuitbreaker-resilience4j -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-circuitbreaker-resilience4j</artifactId>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
