@@ -20,6 +20,34 @@ D:\application\log-management\kibana-9.3.1\config\kibana.yml
 => uncomment elasticsearch.hosts: ["http://localhost:9200"]
 
 B3: RUN 
-C:\Users\thando\Downloads\Software\kibana-8.8.0\bin\kibana.bat
+D:\application\log-management\kibana-9.3.1\bin\kibana.bat
 
 B4: SETUP export log to file from application
+
+B5: Create logstash.conf để thu thập log từ file log
+D:\application\log-management\logstash-9.3.1\bin
+
+type nul > logstash.conf
+
+access link: https://www.elastic.co/docs/reference/logstash/config-examples
+
+edit file logstash.conf
+```
+input {
+  file {
+    path => "D:/Course/libraryx-system/_logs/elk-book-service.log"
+    start_position => "beginning"
+  }
+}
+output {
+  elasticsearch {
+    hosts => ["localhost:9200"]
+  }
+  stdout { codec => rubydebug }
+}
+```
+
+B6: Logstash
+D:\application\log-management\logstash-9.3.1\bin>
+RUN
+.\logstash.bat -f logstash.conf
