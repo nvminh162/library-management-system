@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+  <style>
+    * {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+        "Open Sans", "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    main {
+      padding-top: 48px;
+    }
+
+    :root {
+      --large-device-width: 850px;
+      --primary-color: #0f172a;
+      --secondary-color: #020617;
+      --primary-text-color: #c7d1dd;
+      --secondary-text-color: #061602;
+      --success-background: hsl(159, 82%, 24%);
+      --success-foreground: hsl(164, 86%, 16%);
+      --success: hsl(160, 84%, 39%);
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info-background: hsl(218, 81%, 8%);
+      --info-foreground: hsl(217, 91%, 85%);
+      --border-color: #d1d7dc;
+      --check-box-size: 20px;
+      /* control the size */
+      --check-box-color: var(--info-foreground);
+      /* the active color */
+    }
+
+    body {
+      position: relative;
+      background-color: #020617;
+      color: var(--primary-text-color);
+    }
+
+    #score-stats-container {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      height: 40px;
+      width: 100%;
+      background-color: var(--info-background);
+
+      padding: 0px 16px;
+      color: var(--info-foreground);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #quiz-container {
+      border-radius: 8px;
+      display: flex;
+      gap: 16px;
+      flex-direction: column;
+    }
+
+    /* === Base Styles for both Radio and Checkbox === */
+    input[type="radio"],
+    input[type="checkbox"] {
+        height: var(--check-box-size);
+        aspect-ratio: 1;
+        border: calc(var(--check-box-size) / 8) solid #939393;
+        padding: calc(var(--check-box-size) / 8);
+        background: radial-gradient(farthest-side, var(--check-box-color) 94%, #0000) 50%/0 0 no-repeat content-box;
+        outline-offset: calc(var(--check-box-size) / 10);
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        font-size: inherit;
+        transition: 0.3s;
+    }
+
+    input[type="radio"]:checked,
+    input[type="checkbox"]:checked {
+        border-color: var(--check-box-color);
+        background-size: 100% 100%;
+    }
+
+    input[type="radio"]:disabled,
+    input[type="checkbox"]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* === Specific Styles === */
+    input[type="radio"] {
+      border-radius: 50%; /* Makes it a circle */
+    }
+    
+    input[type="checkbox"] {
+        border-radius: 4px; /* Makes it a square */
+    }
+    
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 767px) {
+
+      input[type="radio"],
+      input[type="checkbox"],
+      label {
+        cursor: default;
+      }
+
+      #quiz-container {
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+    }
+
+    /* PC (Desktop devices) */
+    @media (min-width: 768px) {
+      body {
+        display: flex;
+        justify-content: center;
+      }
+
+      main {
+        max-width: var(--large-device-width);
+      }
+
+      #score-stats-container {
+        max-width: var(--large-device-width);
+      }
+
+      dialog {
+        max-width: var(--large-device-width);
+      }
+    }
+
+    @media print {
+        input[type="radio"],
+        input[type="checkbox"] {
+            background: none !important;
+            border-color: #939393 !important;
+        }
+
+        input[type="radio"]:checked,
+        input[type="checkbox"]:checked {
+            border-color: #939393 !important;
+        }
+    }
+
+    .question-lable {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .button {
+      background-color: var(--success-background);
+      border: none;
+      color: #f4f5f7;
+      opacity: 0.8;
+      font-size: 18px;
+      flex-grow: 1;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .button:hover {
+      opacity: 1;
+    }
+
+    .button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .explanation-btn {
+      border: none;
+      color: var(--success);
+      background-color: transparent;
+    }
+
+    .single-question-container {
+      background-color: var(--primary-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 8px;
+    }
+
+    #modal-content {
+      padding: 16px;
+      line-height: 24px;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    dialog {
+      position: fixed;
+      border: 1px solid var(--border-color);
+      background-color: var(--primary-color);
+      color: rgb(240, 241, 248);
+      padding: 16px;
+      border-radius: 8px;
+      width: 80vw;
+      max-height: 80vh;
+      overflow: auto;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+    #close-modal-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      padding: 2px 8px;
+      border-radius: 2px;
+      border: none;
+      background-color: var(--danger);
+    }
+
+    .correct-answer > label {
+      border: 2px solid var(--success);
+      width: 100%;
+    }
+
+    .incorrect-answer > label {
+      border: 2px solid var(--danger);
+      width: 100%;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    #quiz-meta-container {
+      border-radius: 8px;
+      background-color: var(--primary-color);
+      margin-bottom: 12px;
+      padding: 8px;
+    }
+
+    #quiz-title {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    #quiz-description {
+      line-height: 1.5;
+      padding: 2px 6px;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <main>
+    <section id="quiz-meta-container">
+      <h1 id="quiz-title"></h1>
+      <p id="quiz-description"></p>
+    </section>
+    <section id="score-stats-container">
+      <div id="score-card">
+        Score: <span id="current-score">999</span> of
+        <span id="pass-percent">999%</span>
+      </div>
+      <div>Correct: <span id="correct-answers">999</span></div>
+      <div>Incorrect: <span id="wrong-answers">999</span></div>
+    </section>
+
+    <section id="quiz-container"></section>
+
+    <dialog id="modal" class="modal-container">
+      <div id="modal-content">
+        <p id="modal-text"></p>
+      </div>
+    </dialog>
+  </main>
+
+  <script>
+    const quizData = {"pass_percent": null, "questions": [{"_class": "assessment", "id": 60841728, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Circuit Breaker \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 l\u00e0m g\u00ec trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n?</p>", "relatedLectureIds": ["37835010"], "feedbacks": ["", "", "Circuit Breaker l\u00e0 m\u1ed9t m\u00f4 h\u00ecnh \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 b\u1ea3o v\u1ec7 h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n kh\u1ecfi s\u1ef1 c\u1ed1 khi m\u1ed9t d\u1ecbch v\u1ee5 g\u1eb7p v\u1ea5n \u0111\u1ec1. N\u00f3 gi\u00fap gi\u1edbi h\u1ea1n s\u1ed1 l\u01b0\u1ee3ng y\u00eau c\u1ea7u t\u1edbi d\u1ecbch v\u1ee5 \u0111\u00f3 trong m\u1ed9t kho\u1ea3ng th\u1eddi gian nh\u1ea5t \u0111\u1ecbnh v\u00e0 x\u1eed l\u00fd c\u00e1c l\u1ed7i m\u1ed9t c\u00e1ch ki\u1ec3m so\u00e1t."], "answers": ["<p>Ki\u1ec3m so\u00e1t l\u01b0u l\u01b0\u1ee3ng d\u1eef li\u1ec7u gi\u1eefa c\u00e1c d\u1ecbch v\u1ee5.</p>", "<p>\u0110\u1ea3m b\u1ea3o t\u00ednh nh\u1ea5t qu\u00e1n c\u1ee7a giao d\u1ecbch ph\u00e2n t\u00e1n.</p>", "<p>B\u1ea3o v\u1ec7 h\u1ec7 th\u1ed1ng kh\u1ecfi s\u1ef1 c\u1ed1 khi m\u1ed9t d\u1ecbch v\u1ee5 g\u1eb7p v\u1ea5n \u0111\u1ec1.</p>"]}, "correct_response": ["c"], "section": "", "question_plain": "Circuit Breaker \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 l\u00e0m g\u00ec trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n?", "related_lectures": [{"_class": "lecture", "id": 37835010, "title": "Circuit Breaker v\u1edbi Resilient4J", "created": "2023-05-11T17:29:41Z", "is_published": true, "asset": {"_class": "asset", "id": 48728866, "asset_type": "Video", "title": "Circuit Breaker v\u1edbi Resilient4J  _ Kh\u00f3a h\u1ecdc x\u00e2y d\u1ef1ng h\u1ec7 th\u1ed1ng microservice v\u1edbi Spring Boot #16.mp4", "created": "2023-05-11T17:32:17Z"}, "object_index": 108, "url": "/course/thuc-chien-microservice-voi-spring-boot-va-event-sourcing/learn/lecture/37835010"}]}, {"_class": "assessment", "id": 60841734, "assessment_type": "multiple-choice", "prompt": {"question": "<p>\u0110\u1eb7c \u0111i\u1ec3m ch\u00ednh c\u1ee7a m\u00f4 h\u00ecnh Circuit Breaker l\u00e0 g\u00ec?</p>", "relatedLectureIds": ["37835010"], "feedbacks": ["", "M\u1ed9t trong nh\u1eefng \u0111\u1eb7c \u0111i\u1ec3m ch\u00ednh c\u1ee7a m\u00f4 h\u00ecnh Circuit Breaker l\u00e0 gi\u1edbi h\u1ea1n s\u1ed1 l\u01b0\u1ee3ng y\u00eau c\u1ea7u t\u1edbi m\u1ed9t d\u1ecbch v\u1ee5. Khi d\u1ecbch v\u1ee5 g\u1eb7p v\u1ea5n \u0111\u1ec1, Circuit Breaker s\u1ebd ng\u1eaft k\u1ebft n\u1ed1i t\u1edbi d\u1ecbch v\u1ee5 \u0111\u00f3 v\u00e0 gi\u1edbi h\u1ea1n vi\u1ec7c g\u1eedi y\u00eau c\u1ea7u, tr\u00e1nh qu\u00e1 t\u1ea3i v\u00e0 l\u00e0m h\u1ecfng h\u1ec7 th\u1ed1ng.", ""], "answers": ["<p>T\u1ef1 \u0111\u1ed9ng ph\u1ee5c h\u1ed3i sau m\u1ed9t l\u1ed7i.</p>", "<p>Gi\u1edbi h\u1ea1n s\u1ed1 l\u01b0\u1ee3ng y\u00eau c\u1ea7u t\u1edbi m\u1ed9t d\u1ecbch v\u1ee5.</p>", "<p>Theo d\u00f5i v\u00e0 ghi l\u1ea1i c\u00e1c th\u00f4ng tin v\u1ec1 y\u00eau c\u1ea7u v\u00e0 ph\u1ea3n h\u1ed3i.</p>"]}, "correct_response": ["b"], "section": "", "question_plain": "\u0110\u1eb7c \u0111i\u1ec3m ch\u00ednh c\u1ee7a m\u00f4 h\u00ecnh Circuit Breaker l\u00e0 g\u00ec?", "related_lectures": [{"_class": "lecture", "id": 37835010, "title": "Circuit Breaker v\u1edbi Resilient4J", "created": "2023-05-11T17:29:41Z", "is_published": true, "asset": {"_class": "asset", "id": 48728866, "asset_type": "Video", "title": "Circuit Breaker v\u1edbi Resilient4J  _ Kh\u00f3a h\u1ecdc x\u00e2y d\u1ef1ng h\u1ec7 th\u1ed1ng microservice v\u1edbi Spring Boot #16.mp4", "created": "2023-05-11T17:32:17Z"}, "object_index": 108, "url": "/course/thuc-chien-microservice-voi-spring-boot-va-event-sourcing/learn/lecture/37835010"}]}, {"_class": "assessment", "id": 60841738, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Zipkin v\u00e0 Sleuth l\u00e0 hai c\u00f4ng c\u1ee5 \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 l\u00e0m g\u00ec trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n?</p>", "relatedLectureIds": ["38186122"], "feedbacks": ["", "C\u1ea3 Zipkin v\u00e0 Sleuth \u0111\u1ec1u l\u00e0 c\u00f4ng c\u1ee5 \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 theo d\u00f5i v\u00e0 ph\u00e2n t\u00edch d\u1eef li\u1ec7u y\u00eau c\u1ea7u v\u00e0 ph\u1ea3n h\u1ed3i trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n. Ch\u00fang gi\u00fap ghi l\u1ea1i th\u00f4ng tin v\u1ec1 c\u00e1c y\u00eau c\u1ea7u v\u00e0 ph\u1ea3n h\u1ed3i gi\u1eefa c\u00e1c d\u1ecbch v\u1ee5 kh\u00e1c nhau, cho ph\u00e9p quan s\u00e1t v\u00e0 ph\u00e2n t\u00edch hi\u1ec7u su\u1ea5t v\u00e0 s\u1ef1 t\u01b0\u01a1ng t\u00e1c gi\u1eefa c\u00e1c th\u00e0nh ph\u1ea7n.", ""], "answers": ["<p>Qu\u1ea3n l\u00fd c\u1ea5u h\u00ecnh v\u00e0 cung c\u1ea5p d\u1ecbch v\u1ee5 nh\u1eadn di\u1ec7n.</p>", "<p>Theo d\u00f5i v\u00e0 ph\u00e2n t\u00edch d\u1eef li\u1ec7u y\u00eau c\u1ea7u v\u00e0 ph\u1ea3n h\u1ed3i.</p>", "<p>\u0110\u1ed3ng b\u1ed9 h\u00f3a c\u00e1c ho\u1ea1t \u0111\u1ed9ng gi\u1eefa c\u00e1c d\u1ecbch v\u1ee5 kh\u00e1c nhau.</p>"]}, "correct_response": ["b"], "section": "", "question_plain": "Zipkin v\u00e0 Sleuth l\u00e0 hai c\u00f4ng c\u1ee5 \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 l\u00e0m g\u00ec trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n?", "related_lectures": [{"_class": "lecture", "id": 38186122, "title": "Ditributed tracing service v\u1edbi Zipkin v\u00e0 Sleuth", "created": "2023-06-03T07:24:28Z", "is_published": true, "asset": {"_class": "asset", "id": 49182296, "asset_type": "Video", "title": "zipkin.mp4", "created": "2023-06-03T07:25:18Z"}, "object_index": 109, "url": "/course/thuc-chien-microservice-voi-spring-boot-va-event-sourcing/learn/lecture/38186122"}]}, {"_class": "assessment", "id": 60841742, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Zipkin \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 l\u00e0m g\u00ec?</p>", "relatedLectureIds": ["38186122"], "feedbacks": ["Zipkin l\u00e0 m\u1ed9t c\u00f4ng c\u1ee5 \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 qu\u1ea3n l\u00fd v\u00e0 gi\u00e1m s\u00e1t c\u00e1c d\u1ecbch v\u1ee5 trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n. N\u00f3 gi\u00fap ghi l\u1ea1i v\u00e0 hi\u1ec3n th\u1ecb th\u00f4ng tin v\u1ec1 c\u00e1c y\u00eau c\u1ea7u v\u00e0 ph\u1ea3n h\u1ed3i gi\u1eefa c\u00e1c d\u1ecbch v\u1ee5, cho ph\u00e9p theo d\u00f5i v\u00e0 ph\u00e2n t\u00edch hi\u1ec7u su\u1ea5t, \u0111\u1ed3ng th\u1eddi gi\u00fap t\u00ecm ra c\u00e1c v\u1ea5n \u0111\u1ec1 v\u00e0 l\u1ed7i trong h\u1ec7 th\u1ed1ng.", "", ""], "answers": ["<p>Qu\u1ea3n l\u00fd v\u00e0 gi\u00e1m s\u00e1t c\u00e1c d\u1ecbch v\u1ee5 trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n.</p>", "<p>X\u00e1c \u0111\u1ecbnh v\u00e0 gi\u1ea3i quy\u1ebft c\u00e1c v\u1ea5n \u0111\u1ec1 v\u1ec1 m\u1ea1ng trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n.</p>", "<p>Theo d\u00f5i v\u00e0 ghi l\u1ea1i th\u00f4ng tin v\u1ec1 c\u00e1c y\u00eau c\u1ea7u \u0111i qua c\u00e1c d\u1ecbch v\u1ee5.</p>"]}, "correct_response": ["a"], "section": "", "question_plain": "Zipkin \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 l\u00e0m g\u00ec?", "related_lectures": [{"_class": "lecture", "id": 38186122, "title": "Ditributed tracing service v\u1edbi Zipkin v\u00e0 Sleuth", "created": "2023-06-03T07:24:28Z", "is_published": true, "asset": {"_class": "asset", "id": 49182296, "asset_type": "Video", "title": "zipkin.mp4", "created": "2023-06-03T07:25:18Z"}, "object_index": 109, "url": "/course/thuc-chien-microservice-voi-spring-boot-va-event-sourcing/learn/lecture/38186122"}]}, {"_class": "assessment", "id": 60841746, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Sleuth l\u00e0 c\u00f4ng c\u1ee5 n\u1eb1m trong framework n\u00e0o?</p>", "relatedLectureIds": ["38186122"], "feedbacks": ["Sleuth l\u00e0 m\u1ed9t c\u00f4ng c\u1ee5 n\u1eb1m trong framework Spring Cloud. N\u00f3 cung c\u1ea5p t\u00edch h\u1ee3p v\u1edbi Spring Boot \u0111\u1ec3 thu th\u1eadp v\u00e0 ghi l\u1ea1i th\u00f4ng tin v\u1ec1 c\u00e1c y\u00eau c\u1ea7u v\u00e0 ph\u1ea3n h\u1ed3i gi\u1eefa c\u00e1c d\u1ecbch v\u1ee5 trong h\u1ec7 th\u1ed1ng ph\u00e2n t\u00e1n, gi\u00fap theo d\u00f5i v\u00e0 ph\u00e2n t\u00edch qu\u00e1 tr\u00ecnh giao ti\u1ebfp gi\u1eefa c\u00e1c th\u00e0nh ph\u1ea7n.", "", ""], "answers": ["<p>Spring Cloud.</p>", "<p>Apache Kafka.</p>", "<p>Netflix OSS.</p>"]}, "correct_response": ["a"], "section": "", "question_plain": "Sleuth l\u00e0 c\u00f4ng c\u1ee5 n\u1eb1m trong framework n\u00e0o?", "related_lectures": [{"_class": "lecture", "id": 38186122, "title": "Ditributed tracing service v\u1edbi Zipkin v\u00e0 Sleuth", "created": "2023-06-03T07:24:28Z", "is_published": true, "asset": {"_class": "asset", "id": 49182296, "asset_type": "Video", "title": "zipkin.mp4", "created": "2023-06-03T07:25:18Z"}, "object_index": 109, "url": "/course/thuc-chien-microservice-voi-spring-boot-va-event-sourcing/learn/lecture/38186122"}]}]};
+
+     let correct = new Set();
+    let incorrect = new Set();
+    let totalNumberOfQuestions = 0;
+    const quizTitle = quizData.quiz_title || "Quiz";
+    const quizDescription = quizData.quiz_description || "Please answer the questions below.";
+    const questionData = quizData.questions;
+    const passPercent = quizData.pass_percent;
+    const modalTextElement = document.getElementById("modal-text");
+    const quizContainerElement = document.getElementById("quiz-container");
+    const dialog = document.querySelector("dialog");
+    const closeButton = document.getElementById("close-modal-btn");
+    const quizTitleElement = document.getElementById("quiz-title");
+    const quizDescriptionElement = document.getElementById("quiz-description");
+
+    function main() {
+      // update quiz meta data
+      document.title = quizTitle;
+      quizTitleElement.innerHTML = quizTitle;
+      quizDescriptionElement.innerHTML = quizDescription;
+
+      const passPercentElement = document.getElementById("pass-percent");
+      passPercentElement.innerHTML = passPercent ? `${passPercent}%` : "N/A";
+      totalNumberOfQuestions = questionData.length;
+      
+      if(closeButton) {
+          closeButton.addEventListener("click", () => dialog.close());
+      }
+
+      // shuffle the questionData to randomize the order
+      for (let i = questionData.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questionData[i], questionData[j]] = [questionData[j], questionData[i]];
+      }
+
+      let formattedQuestions = questionData.map(formatSingleQuestionData);
+      updateScore();
+      // display the formattedQuestions
+      formattedQuestions.forEach((question, idx) => {
+        renderSingleQuestion(question, idx + 1);
+      });
+    }
+
+    /**
+     * Formats the raw question data into a more usable structure.
+     */
+    function formatSingleQuestionData(singleQuizData = null) {
+        const { prompt, correct_response, id, assessment_type } = singleQuizData;
+        
+        const answers = prompt.answers || [];
+        // Create a detailed answer object including correctness
+        const formattedAnswers = answers.map((answerText, index) => {
+            const letter = String.fromCharCode(97 + index); // a, b, c...
+            const isCorrect = correct_response.includes(letter);
+            return {
+                text: answerText,
+                isCorrect: isCorrect
+            };
+        });
+
+        return {
+            id: id,
+            assessment_type: assessment_type,
+            question: prompt.question,
+            answers: formattedAnswers, // Use the new formatted answers
+            explanation: prompt?.explanation || "",
+            feedbacks: prompt.feedbacks
+        };
+    }
+
+    /**
+     * Renders a single question.
+     */
+    const renderSingleQuestion = (singleQuestionData = {}, rootIndex = 1) => {
+        const { id, explanation, answers, question, feedbacks, assessment_type } = singleQuestionData;
+
+        // shuffle the answers to randomize their order
+        // for (let i = answers.length - 1; i > 0; i--) {
+        //     const j = Math.floor(Math.random() * (i + 1));
+        //     [answers[i], answers[j]] = [answers[j], answers[i]];
+        // }
+        
+        const inputType = assessment_type === 'multi-select' ? 'checkbox' : 'radio';
+        const inputName = `answer_${id}`; // Unique name for each question group
+
+        const optionsHTML = answers
+            .map((option, index) => {
+                const optionId = `${id}_${index}`;
+                return `
+                <div class="question-lable">
+                    <input type="${inputType}" id="${optionId}" name="${inputName}" value="${option.text}" data-is-correct="${option.isCorrect}" />
+                    <label for="${optionId}">${option.text}</label>
+                </div>
+                `;
+            })
+            .join("");
+
+        const container = document.createElement("div");
+        container.innerHTML = `
+            <form data-question-id="${id}" class="single-question-container" onsubmit="submitButtonListener(event)">
+                <div style="display: flex;justify-content: space-between;">
+                    <p style="font-weight: 600">Question ${rootIndex}:</p>
+                    <button type="button" onclick="renderExplanation(event)" data-feedbacks='${JSON.stringify(feedbacks)}' data-explanation="${explanation}" class="explanation-btn">View Explanation</button>
+                </div>
+                <p style="margin-bottom: 8px;line-height: 1.5">${question}</p>
+                <div class="options-container">
+                    ${optionsHTML}
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="submit" class="button submit-btn">Submit</button>
+                </div>
+            </form>
+        `;
+        quizContainerElement.appendChild(container);
+    };
+
+    /**
+     * Updates the score board.
+     */
+    function updateScore() {
+        const currentPercentageElement = document.getElementById("current-score");
+        const correctAnswerElement = document.getElementById("correct-answers");
+        const wrongAnswerElement = document.getElementById("wrong-answers");
+        correctAnswerElement.innerHTML = correct.size;
+        wrongAnswerElement.innerHTML = incorrect.size;
+        if (totalNumberOfQuestions > 0) {
+            const score = Number((correct.size / totalNumberOfQuestions) * 100).toFixed(0);
+            currentPercentageElement.innerHTML = score;
+        }
+    }
+
+    /**
+    * Compares two sets for equality.
+    */
+    function setsAreEqual(setA, setB) {
+        if (setA.size !== setB.size) {
+            return false;
+        }
+        for (const item of setA) {
+            if (!setB.has(item)) {
+            return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Handles the form submission for a single question.
+     */
+    const submitButtonListener = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const questionId = form.dataset.questionId;
+        const inputs = form.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+        
+        const userSelectedValues = new Set();
+        const actualCorrectValues = new Set();
+        let hasSelection = false;
+
+        inputs.forEach(input => {
+            if (input.checked) {
+                userSelectedValues.add(input.value);
+                hasSelection = true;
+            }
+            if (input.dataset.isCorrect === 'true') {
+                actualCorrectValues.add(input.value);
+            }
+        });
+
+        if (!hasSelection) {
+            alert("Please select an answer!");
+            return;
+        }
+
+        const isFullyCorrect = setsAreEqual(userSelectedValues, actualCorrectValues);
+
+        if (isFullyCorrect) {
+            correct.add(questionId);
+            incorrect.delete(questionId);
+        } else {
+            incorrect.add(questionId);
+            correct.delete(questionId);
+        }
+        
+        updateScore();
+
+        // Apply visual feedback and disable the form
+        form.querySelectorAll(".question-lable").forEach(labelContainer => {
+            const input = labelContainer.querySelector('input');
+            labelContainer.classList.remove("correct-answer", "incorrect-answer");
+
+            // Highlight all correct answers
+            if (input.dataset.isCorrect === 'true') {
+                labelContainer.classList.add("correct-answer");
+            } 
+            // Highlight user's incorrect selections
+            else if (input.checked && input.dataset.isCorrect === 'false') {
+                labelContainer.classList.add("incorrect-answer");
+            }
+        });
+
+      
+    };
+
+    /**
+     * Renders the explanation in a modal dialog.
+     */
+    function renderExplanation(ev) {
+        modalTextElement.innerHTML = '';
+        const explanation = ev.target.dataset?.explanation;
+        const feedbacksString = ev.target.dataset?.feedbacks;
+        let contentFound = false;
+
+        if (explanation && explanation.trim() !== "") {
+            modalTextElement.innerHTML += explanation;
+            contentFound = true;
+        }
+
+        if (feedbacksString) {
+            try {
+                const feedbacks = JSON.parse(feedbacksString);
+                feedbacks.forEach(feedback => {
+                    if (feedback && feedback.trim() !== "") {
+                        modalTextElement.innerHTML += feedback;
+                        contentFound = true;
+                    }
+                });
+            } catch (e) {
+                console.error("Error parsing feedbacks JSON:", e);
+            }
+        }
+
+        if (!contentFound) {
+            modalTextElement.innerHTML = "<p>No explanation found for this question.</p>";
+        }
+
+        dialog.showModal();
+        dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+    }
+  </script>
+</body>
+
+</html>
+DDict Logo
