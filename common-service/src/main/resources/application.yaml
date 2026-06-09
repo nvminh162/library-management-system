@@ -1,0 +1,18 @@
+# không cần khai báo spring.application.name
+
+spring:
+    kafka:
+        bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+        consumer:
+            group-id: ${KAFKA_GROUP_ID:default-group}
+    mail:
+        host: ${MAIL_HOST:smtp.gmail.com}
+        port: ${MAIL_PORT:587}
+        username: ${MAIL_USERNAME:your-email@gmail.com}
+        password: ${MAIL_PASSWORD:your-password}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
