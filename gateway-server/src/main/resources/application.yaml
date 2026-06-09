@@ -1,0 +1,99 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-server # Tên của service, dùng để đăng ký với Eureka Server
+  output:
+    ansi:
+      enabled: ALWAYS
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD:}
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true # Cho phép API Gateway tự động phát hiện các service đã đăng ký với Eureka Server
+          routes:
+            - id: employee-service # ID của route, có thể đặt tùy ý
+              uri: lb://employee-service # Sử dụng load balancer để định tuyến đến Employee Service, "employee-service" là tên của service đã đăng ký với Eureka Server
+              predicates:
+                - Path=/api/v1/employees/** # Định nghĩa đường dẫn mà API Gateway sẽ chuyển tiếp đến Employee Service
+              filters:
+                - name: RequestRateLimiter # Sử dụng filter để giới hạn tốc độ truy cập
+                  args:
+                    "[redis-rate-limiter.replenishRate]": ${RATE_LIMIT_REPLENISH_RATE:10} # Số lượng token được thêm vào bucket mỗi giây
+                    "[redis-rate-limiter.burstCapacity]": ${RATE_LIMIT_BURST_CAPACITY:20} # Số lượng token tối đa trong bucket (sức chứa của bucket)
+                    "[redis-rate-limiter.requestedTokens]": ${RATE_LIMIT_REQUESTED_TOKENS:1} # Số lượng token cần thiết để xử lý một yêu cầu
+                - KeyAuthFilter
+
+            - id: book-service
+              uri: lb://book-service
+              predicates:
+                - Path=/api/v1/books/**
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    "[redis-rate-limiter.replenishRate]": ${RATE_LIMIT_REPLENISH_RATE:10}
+                    "[redis-rate-limiter.burstCapacity]": ${RATE_LIMIT_BURST_CAPACITY:20}
+                    "[redis-rate-limiter.requestedTokens]": ${RATE_LIMIT_REQUESTED_TOKENS:1}
+                - KeyAuthFilter
+
+            - id: borrowing-service
+              uri: lb://borrowing-service
+              predicates:
+                - Path=/api/v1/borrowing/**
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    "[redis-rate-limiter.replenishRate]": ${RATE_LIMIT_REPLENISH_RATE:10}
+                    "[redis-rate-limiter.burstCapacity]": ${RATE_LIMIT_BURST_CAPACITY:20}
+                    "[redis-rate-limiter.requestedTokens]": ${RATE_LIMIT_REQUESTED_TOKENS:1}
+                - KeyAuthFilter
+
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/v1/users/**
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    "[redis-rate-limiter.replenishRate]": ${RATE_LIMIT_REPLENISH_RATE:10}
+                    "[redis-rate-limiter.burstCapacity]": ${RATE_LIMIT_BURST_CAPACITY:20}
+                    "[redis-rate-limiter.requestedTokens]": ${RATE_LIMIT_REQUESTED_TOKENS:1}
+                - KeyAuthFilter
+                - JwtHeaderFilter
+
+            - id: auth-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/v1/auth/**
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    "[redis-rate-limiter.replenishRate]": ${RATE_LIMIT_REPLENISH_RATE:10}
+                    "[redis-rate-limiter.burstCapacity]": ${RATE_LIMIT_BURST_CAPACITY:20}
+                    "[redis-rate-limiter.requestedTokens]": ${RATE_LIMIT_REQUESTED_TOKENS:1}
+                - KeyAuthFilter
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
+
+eureka:
+  instance:
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
+  client:
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE:http://localhost:8761/eureka}
+    register-with-eureka: true
+    fetch-registry: true
+
+app:
+  api-key: ${KEY_AUTH_FILTER}
