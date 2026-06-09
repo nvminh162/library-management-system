@@ -2,26 +2,78 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-DiscoveryServerApplication<discovery-server>",
+            "name": "Spring Boot-DiscoveryServerApplication<com.nvminh162-discovery-server>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "com.nvminh162.discovery.DiscoveryServerApplication",
-            "projectName": "discovery-server",
+            "projectName": "com.nvminh162-discovery-server",
             "args": "",
             "envFile": "${workspaceFolder}/discovery-server/.env",
-            "console": "integratedTerminal",
-            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=53515 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=discovery-server"
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=53492 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=com.nvminh162-discovery-server"
         },
         {
             "type": "java",
-            "name": "Spring Boot-GatewayServerApplication<gateway-server>",
+            "name": "Spring Boot-GatewayServerApplication<com.nvminh162-gateway-server>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "com.nvminh162.gateway.GatewayServerApplication",
-            "projectName": "gateway-server",
+            "projectName": "com.nvminh162-gateway-server",
             "args": "",
             "envFile": "${workspaceFolder}/gateway-server/.env",
             "console": "integratedTerminal",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=53494 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=com.nvminh162-gateway-server"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-BookServiceApplication<com.nvminh162-book-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.nvminh162.book.BookServiceApplication",
+            "projectName": "com.nvminh162-book-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/book-service/.env",
+            "console": "integratedTerminal",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=58498 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=com.nvminh162-book-service"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-BorrowServiceApplication<com.nvminh162-borrow-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.nvminh162.borrow.BorrowServiceApplication",
+            "projectName": "com.nvminh162-borrow-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/borrow-service/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EmployeeServiceApplication<com.nvminh162-employee-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.nvminh162.employee.EmployeeServiceApplication",
+            "projectName": "com.nvminh162-employee-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/employee-service/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-NotificationServiceApplication<notification-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.nvminh162.notification.NotificationServiceApplication",
+            "projectName": "notification-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/notification-service/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-UserServiceApplication<user-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.nvminh162.user.UserServiceApplication",
+            "projectName": "user-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/user-service/.env"
         }
     ]
 }

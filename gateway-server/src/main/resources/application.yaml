@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+
 spring:
   application:
     name: gateway-server # Tên của service, dùng để đăng ký với Eureka Server

@@ -12,7 +12,7 @@ public class JwtHeaderFilter extends AbstractGatewayFilterFactory<JwtHeaderFilte
     static class Config {
     }
 
-    public JwtHeaderFilter(){
+    public JwtHeaderFilter() {
         super(JwtHeaderFilter.Config.class);
     }
 
